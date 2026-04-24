@@ -13,10 +13,11 @@ public class MainMenu {
             System.out.println("\n===== Main Menu =====");
             System.out.println("1. View Timetable");
             System.out.println("2. Book Lesson");
-            System.out.println("3. View My Bookings");
-            System.out.println("4. Change Booking");
-            System.out.println("5. Write Review");
-            System.out.println("6. Generate Reports");
+            System.out.println("3. Attend Lesson");
+            System.out.println("4. View My Bookings");
+            System.out.println("5. Change Booking");
+            System.out.println("6. Cancel Booking");
+            System.out.println("7. Generate Reports");
             System.out.println("0. Logout");
 
             choice = scanner.nextInt();
@@ -26,12 +27,20 @@ public class MainMenu {
                 case 1:
                     viewTimetable();
                     break;
-
                 case 2:
                     bookLesson(email);
                     break;
                 case 3:
+                    attendLesson(email);
+                    break;
+                case 4:
                     viewMyBookings(email);
+                    break;
+                case 5:
+                    changeBooking(email);
+                    break;
+                case 6:
+                    cancelBooking(email);
                     break;
                 case 0:
                     System.out.println("Logging out...");
@@ -105,7 +114,6 @@ public class MainMenu {
 
         Scanner scanner = new Scanner(System.in);
 
-        // show timetable first (full list is fine for booking)
         BookingService.viewTimetable();
 
         System.out.print("Enter Lesson ID to book: ");
@@ -115,5 +123,77 @@ public class MainMenu {
         BookingService.bookLesson(email, lessonId);
     }
 
+    private static void changeBooking(String email) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Booking ID to change: ");
+        int bookingId = scanner.nextInt();
+        scanner.nextLine();
+
+        BookingService.viewTimetable();
+
+        System.out.print("Enter new Lesson ID: ");
+        int newLessonId = scanner.nextInt();
+        scanner.nextLine();
+
+        BookingService.changeBooking(email, bookingId, newLessonId);
+    }
+
+    public static void cancelBooking(String email) {
+
+        Booking selectedBooking = null;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Booking ID to Cancel: ");
+        int bookingId = scanner.nextInt();
+
+        for (Booking b : Database.bookings) {
+            if (b.id == bookingId && b.memberEmail.equals(email)) {
+                selectedBooking = b;
+                break;
+            }
+        }
+
+        if (selectedBooking == null) {
+            System.out.println("❌ Booking not found.");
+            return;
+        }
+
+        if (selectedBooking.status.equals("cancelled")) {
+            System.out.println("❌ Already cancelled.");
+            return;
+        }
+
+        if (selectedBooking.status.equals("attended")) {
+            System.out.println("❌ Cannot cancel attended lesson.");
+            return;
+        }
+
+        selectedBooking.lesson.bookings.remove(selectedBooking);
+
+        selectedBooking.status = "cancelled";
+
+        System.out.println("✅ Booking cancelled successfully.");
+    }
+
+    private static void attendLesson(String email) {
+
+        viewMyBookings(email);
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Booking ID to attend: ");
+        int bookingId = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter rating (1-5): ");
+        int rating = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter review: ");
+        String review = scanner.nextLine();
+
+        BookingService.attendLesson(email, bookingId, rating, review);
+    }
 
 }
