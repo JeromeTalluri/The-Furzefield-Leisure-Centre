@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    public static void showMenu(String email) {
+    public static void showMenu(String email,String name) {
 
         Scanner scanner = new Scanner(System.in);
         int choice;
