@@ -1,5 +1,7 @@
 package org.furzefield;
 
+import java.util.Scanner;
+
 public class Booking {
 
     int id;

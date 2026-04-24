@@ -82,9 +82,20 @@ public class SetupDatabase {
 
             Lesson lesson = Database.lessons.get(i);
 
-            int count = 2 + (i % 3);
+            // ✅ ONLY populate first 4 weeks
+            if (lesson.week > 4) {
+                continue;
+            }
 
-            for (int j = 0; j < count && j < users.length; j++) {
+            // 🔽 reduce number of bookings
+            int count;
+            if (i % 3 == 0) {
+                count = 4; // full lesson
+            } else {
+                count = 2; // partial
+            }
+
+            for (int j = 0; j < count; j++) {
 
                 Booking b = new Booking(bookingId++, users[j], lesson);
 

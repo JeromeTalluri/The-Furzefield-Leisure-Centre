@@ -28,7 +28,7 @@ public class MainMenu {
                     break;
 
                 case 2:
-//                    bookLesson(email);
+                    bookLesson(email);
                     break;
                 case 3:
                     viewMyBookings(email);
@@ -99,6 +99,20 @@ public class MainMenu {
             default:
                 System.out.println("Invalid choice.");
         }
+    }
+
+    private static void bookLesson(String email) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        // show timetable first (full list is fine for booking)
+        BookingService.viewTimetable();
+
+        System.out.print("Enter Lesson ID to book: ");
+        int lessonId = scanner.nextInt();
+        scanner.nextLine();
+
+        BookingService.bookLesson(email, lessonId);
     }
 
 
