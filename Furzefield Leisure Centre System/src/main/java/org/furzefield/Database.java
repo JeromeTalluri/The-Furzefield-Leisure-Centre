@@ -19,4 +19,13 @@ public class Database {
 
         return null;
     }
+
+    // all lessons (48)
+    public static List<Lesson> lessons = new ArrayList<>();
+
+    // all bookings
+    public static List<Booking> bookings = new ArrayList<>();
+
+    // auto increment booking id
+    public static int bookingCounter = 1;
 }
